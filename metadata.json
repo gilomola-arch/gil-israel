@@ -1,0 +1,7 @@
+{
+  "name": "Viral Creators Academy",
+  "description": "A comprehensive digital course and community platform for mastering mobile video editing and content creation to achieve viral growth and monetization.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
