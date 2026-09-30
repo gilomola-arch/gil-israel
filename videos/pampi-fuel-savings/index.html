@@ -1,0 +1,291 @@
+<!doctype html>
+<html lang="he">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <script src="vendor/gsap.min.js"></script>
+    <style>
+      @font-face {
+        font-family: "Heebo";
+        font-weight: 500;
+        src: url("fonts/heebo-hebrew-500-normal.woff2") format("woff2");
+        unicode-range: U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
+      }
+      @font-face {
+        font-family: "Heebo";
+        font-weight: 800;
+        src: url("fonts/heebo-hebrew-800-normal.woff2") format("woff2");
+        unicode-range: U+0590-05FF, U+200C-2010, U+20AA, U+25CC, U+FB1D-FB4F;
+      }
+      @font-face {
+        font-family: "Heebo";
+        font-weight: 500;
+        src: url("fonts/heebo-latin-500-normal.woff2") format("woff2");
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+      @font-face {
+        font-family: "Heebo";
+        font-weight: 800;
+        src: url("fonts/heebo-latin-800-normal.woff2") format("woff2");
+        unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+      }
+
+      :root {
+        --bg: #0b1220;
+        --ink: #f8fafc;
+        --muted: #94a3b8;
+        --yellow: #ffc21a;
+        --red: #ef4444;
+        --green: #22c55e;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: var(--bg); }
+      #root {
+        position: relative;
+        width: 100%;
+        height: 100%;
+        background: var(--bg);
+        font-family: "Heebo", sans-serif;
+        color: var(--ink);
+        direction: rtl;
+        overflow: hidden;
+      }
+      .scene { position: absolute; inset: 0; }
+      .bgglow { position: absolute; inset: 0; background: radial-gradient(800px 800px at 50% 35%, rgba(255,194,26,0.16), transparent 70%); }
+
+      /* ---------- scene 1 ---------- */
+      .s1-title { position: absolute; top: 230px; left: 60px; right: 60px; text-align: center; font-size: 112px; font-weight: 800; line-height: 1.15; }
+      .s1-title .hl { color: var(--yellow); }
+      .s1-gauge { position: absolute; top: 760px; left: 140px; width: 800px; height: 540px; }
+      .coin { position: absolute; width: 90px; height: 90px; border-radius: 50%; background: var(--yellow); color: #7a5600; font-size: 54px; font-weight: 800; display: flex; align-items: center; justify-content: center; box-shadow: inset 0 -8px 0 rgba(0,0,0,0.15); }
+
+      /* ---------- split scenes ---------- */
+      .half { position: absolute; left: 0; right: 0; overflow: hidden; }
+      .half.top { top: 0; height: 960px; }
+      .half.bottom { top: 960px; height: 960px; }
+      .half .fill { position: absolute; inset: 0; }
+      .badge { position: absolute; top: 130px; right: 70px; padding: 18px 44px; border-radius: 60px; font-size: 56px; font-weight: 800; }
+      .meter { position: absolute; left: 70px; right: 70px; top: 420px; }
+      .meter .lbl { font-size: 52px; font-weight: 500; margin-bottom: 26px; color: var(--ink); }
+      .meter .track { height: 96px; border-radius: 48px; background: rgba(255,255,255,0.12); overflow: hidden; direction: rtl; }
+      .meter .bar { height: 100%; width: 100%; border-radius: 48px; transform-origin: right center; }
+            .note { position: absolute; left: 70px; right: 70px; top: 640px; font-size: 44px; font-weight: 500; color: var(--muted); }
+      .half.bottom .badge { top: 50px; }
+      .half.bottom .meter { top: 170px; }
+      .half.bottom .note { top: 400px; }
+      .divider { position: absolute; left: 0; right: 0; top: 950px; height: 20px; background: var(--yellow); }
+      .fine { position: absolute; left: 0; right: 0; top: 890px; text-align: center; font-size: 34px; color: var(--muted); }
+
+      /* ---------- scene 3 list ---------- */
+      .s3-title { position: absolute; top: 210px; left: 60px; right: 60px; text-align: center; font-size: 96px; font-weight: 800; line-height: 1.15; }
+      .row { position: absolute; left: 70px; right: 70px; height: 210px; border-radius: 40px; background: rgba(255,255,255,0.08); display: flex; align-items: center; gap: 36px; padding: 0 44px; }
+      .row .num { flex: none; width: 120px; height: 120px; border-radius: 50%; background: var(--yellow); color: #0b1220; font-size: 76px; font-weight: 800; display: flex; align-items: center; justify-content: center; }
+      .row .txt { font-size: 72px; font-weight: 800; }
+      .row .up { margin-inline-start: auto; font-size: 80px; color: var(--red); font-weight: 800; }
+
+      /* ---------- scene 4 ---------- */
+      .bigx { position: absolute; top: 200px; left: 0; right: 0; text-align: center; font-size: 150px; font-weight: 800; color: var(--red); }
+      .wrench { position: absolute; top: 400px; left: 340px; width: 400px; height: 400px; }
+      .bottle { position: absolute; top: 1080px; left: 340px; width: 400px; height: 640px; }
+      .tag { position: absolute; left: 0; right: 0; text-align: center; font-size: 64px; font-weight: 800; }
+
+      /* ---------- scene 5 ---------- */
+      .s5-brand { position: absolute; top: 520px; left: 40px; right: 40px; text-align: center; }
+      .s5-brand .a { font-size: 88px; font-weight: 500; color: var(--muted); }
+      .s5-brand .b { font-size: 200px; font-weight: 800; color: var(--yellow); line-height: 1.3; }
+      .s5-brand .c { font-size: 92px; font-weight: 800; margin-top: 30px; }
+      .s5-fine { position: absolute; left: 60px; right: 60px; bottom: 300px; text-align: center; font-size: 36px; color: var(--muted); }
+
+      /* ---------- captions ---------- */
+      .cap { position: absolute; left: 50px; right: 50px; top: 1430px; text-align: center; }
+      .cap .line { display: inline-block; padding: 18px 40px 26px; border-radius: 36px; background: rgba(11,18,32,0.86); font-size: 70px; font-weight: 800; line-height: 1.22; }
+      .cap .w { display: inline-block; margin: 0 9px; }
+      .cap .w.key { color: var(--yellow); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="20" data-width="1080" data-height="1920">
+      <!-- ============ SCENE 1: hook (0-4) ============ -->
+      <div id="s1" class="scene clip" data-start="0" data-duration="4.3" data-track-index="1">
+        <div class="bgglow"></div>
+        <div class="s1-title" id="s1-title"><span class="hl">הרכב</span> שלך שותה יותר ממה שנראה לך?</div>
+        <svg class="s1-gauge" id="s1-gauge" viewBox="0 0 800 540">
+          <path d="M60 440 A340 340 0 0 1 740 440" fill="none" stroke="rgba(255,255,255,0.16)" stroke-width="44" stroke-linecap="round" />
+          <path id="s1-arc" d="M60 440 A340 340 0 0 1 740 440" fill="none" stroke="#ffc21a" stroke-width="44" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="0" />
+          <text x="60" y="495" fill="#94a3b8" font-size="44" font-family="Heebo" font-weight="800">E</text>
+          <text x="720" y="495" fill="#94a3b8" font-size="44" font-family="Heebo" font-weight="800">F</text>
+          <g id="s1-needle" style="transform-origin: 400px 440px">
+            <rect x="394" y="130" width="12" height="320" rx="6" fill="#f8fafc" />
+            <circle cx="400" cy="440" r="34" fill="#f8fafc" />
+          </g>
+        </svg>
+        <div class="coin" id="c1" style="left: 250px; top: 1200px">₪</div>
+        <div class="coin" id="c2" style="left: 495px; top: 1200px">₪</div>
+        <div class="coin" id="c3" style="left: 740px; top: 1200px">₪</div>
+      </div>
+
+      <!-- ============ SCENE 2: split screen (4.3-9.5) ============ -->
+      <div id="s2" class="scene clip" data-start="4.3" data-duration="5.2" data-track-index="1">
+        <div class="half top" id="s2-top">
+          <div class="fill" style="background: linear-gradient(180deg, #3b0f14, #1b0a10)"></div>
+          <div class="badge" style="background: var(--red); color: #fff">בלי דלקן</div>
+          <div class="meter">
+            <div class="lbl">צריכת דלק</div>
+            <div class="track"><div class="bar" id="s2-bar-a" style="background: var(--red)"></div></div>
+          </div>
+          <div class="note">מנוע מלוכלך, פחות יעיל</div>
+        </div>
+        <div class="half bottom" id="s2-bot">
+          <div class="fill" style="background: linear-gradient(180deg, #0a2a1a, #08160f)"></div>
+          <div class="badge" style="background: var(--green); color: #052e16">עם דלקן של פאמפי</div>
+          <div class="meter">
+            <div class="lbl">צריכת דלק</div>
+            <div class="track"><div class="bar" id="s2-bar-b" style="background: var(--green)"></div></div>
+          </div>
+          <div class="note">מנוע נקי, תדלוק חכם</div>
+        </div>
+        <div class="divider" id="s2-div"></div>
+        <div class="fine">להמחשה בלבד</div>
+      </div>
+
+      <!-- ============ SCENE 3: list (9.5-14) ============ -->
+      <div id="s3" class="scene clip" data-start="9.5" data-duration="4.5" data-track-index="1">
+        <div class="bgglow"></div>
+        <div class="s3-title" id="s3-title">שלוש הוצאות שמתנפחות</div>
+        <div class="row" id="s3-r1" style="top: 520px"><div class="num">1</div><div class="txt">תדלוק</div><div class="up">↑</div></div>
+        <div class="row" id="s3-r2" style="top: 780px"><div class="num">2</div><div class="txt">טיפולים</div><div class="up">↑</div></div>
+        <div class="row" id="s3-r3" style="top: 1040px"><div class="num">3</div><div class="txt">תיקונים</div><div class="up">↑</div></div>
+      </div>
+
+      <!-- ============ SCENE 4: split screen (14-17.5) ============ -->
+      <div id="s4" class="scene clip" data-start="14" data-duration="3.7" data-track-index="1">
+        <div class="half top" id="s4-top">
+          <div class="fill" style="background: linear-gradient(180deg, #3b0f14, #1b0a10)"></div>
+          <svg class="wrench" id="s4-wrench" viewBox="0 0 400 400">
+            <g fill="none" stroke="#f8fafc" stroke-width="34" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M110 290 L250 150" />
+              <circle cx="290" cy="110" r="64" />
+            </g>
+            <path d="M80 320 L120 280" stroke="#f8fafc" stroke-width="56" stroke-linecap="round" />
+          </svg>
+          <div class="tag" style="top: 770px; color: var(--red)">תיקון גדול = חשבון גדול</div>
+        </div>
+        <div class="half bottom" id="s4-bot">
+          <div class="fill" style="background: linear-gradient(180deg, #0a2a1a, #08160f)"></div>
+        </div>
+        <svg class="bottle" id="s4-bottle" viewBox="0 0 400 640" style="top: 1010px; left: 420px; width: 240px; height: 384px">
+          <rect x="150" y="10" width="100" height="70" rx="14" fill="#ffc21a" />
+          <path d="M140 80 H260 V130 Q330 170 330 240 V600 Q330 630 300 630 H100 Q70 630 70 600 V240 Q70 170 140 130 Z" fill="#f8fafc" />
+          <rect x="70" y="290" width="260" height="220" fill="#22c55e" />
+          <text x="200" y="400" fill="#fff" font-size="92" font-weight="800" font-family="Heebo" text-anchor="middle">דלקן</text>
+          <text x="200" y="500" fill="#fff" font-size="40" font-weight="500" font-family="Heebo" text-anchor="middle">פאמפי</text>
+        </svg>
+        <div class="divider" id="s4-div" style="top: 950px"></div>
+      </div>
+
+      <!-- ============ SCENE 5: CTA (17.5-20) ============ -->
+      <div id="s5" class="scene clip" data-start="17.7" data-duration="2.3" data-track-index="1">
+        <div class="bgglow"></div>
+        <div class="s5-brand">
+          <div class="a" id="s5-a">תדלקו חכם עם</div>
+          <div class="b" id="s5-b">דלקן</div>
+          <div class="c" id="s5-c">של פאמפי</div>
+        </div>
+        <div class="s5-fine">התוצאות משתנות לפי סוג הרכב וסגנון הנהיגה</div>
+      </div>
+
+      <!-- ============ CAPTIONS (track 2) ============ -->
+      <div class="cap clip" id="cap1" data-start="0.2" data-duration="2.0" data-track-index="2"><span class="line"></span></div>
+      <div class="cap clip" id="cap2" data-start="2.2" data-duration="2.1" data-track-index="2"><span class="line"></span></div>
+      <div class="cap clip" id="cap3" data-start="4.4" data-duration="2.4" data-track-index="2"><span class="line"></span></div>
+      <div class="cap clip" id="cap4" data-start="6.8" data-duration="2.7" data-track-index="2"><span class="line"></span></div>
+      <div class="cap clip" id="cap5" data-start="9.6" data-duration="2.3" data-track-index="2"><span class="line"></span></div>
+      <div class="cap clip" id="cap6" data-start="11.9" data-duration="2.1" data-track-index="2"><span class="line"></span></div>
+      <div class="cap clip" id="cap7" data-start="14.1" data-duration="3.4" data-track-index="2"><span class="line"></span></div>
+      <div class="cap clip" id="cap8" data-start="17.8" data-duration="2.2" data-track-index="2"><span class="line"></span></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+
+      // ---- captions: phrases, "*" marks keyword highlight
+      const CAPS = [
+        ["cap1", "הרכב שלך *שותה* יותר ממה שנראה לך?"],
+        ["cap2", "מחירי הדלק עולים, והארנק מרגיש"],
+        ["cap3", "מנוע *מלוכלך* שורף יותר דלק"],
+        ["cap4", "*דלקן* של פאמפי עוזר לשמור אותו נקי"],
+        ["cap5", "פחות תדלוקים, פחות *טיפולים*"],
+        ["cap6", "וגם פחות הוצאות על *תיקונים*"],
+        ["cap7", "מניעה קטנה עולה *הרבה פחות* מתיקון גדול"],
+        ["cap8", "חסכו בכל *תדלוק*"],
+      ];
+      CAPS.forEach(([id, text]) => {
+        const line = document.querySelector("#" + id + " .line");
+        text.split(" ").forEach((tok) => {
+          const key = tok.startsWith("*") ;
+          const span = document.createElement("span");
+          span.className = "w" + (key ? " key" : "");
+          span.textContent = tok.replace(/\*/g, "");
+          line.appendChild(span);
+          line.appendChild(document.createTextNode(" "));
+        });
+      });
+      CAPS.forEach(([id]) => {
+        const start = parseFloat(document.getElementById(id).dataset.start);
+        const dur = parseFloat(document.getElementById(id).dataset.duration);
+        tl.from("#" + id + " .line", { y: 40, opacity: 0, duration: 0.3, ease: "power3.out" }, start);
+        tl.from("#" + id + " .w", { y: 26, opacity: 0, duration: 0.25, stagger: 0.09, ease: "back.out(1.6)" }, start + 0.05);
+        tl.to("#" + id + " .line", { opacity: 0, duration: 0.15 }, start + dur - 0.17);
+      });
+
+      // ---- scene 1
+      tl.from("#s1-title", { y: -60, opacity: 0, duration: 0.6, ease: "power3.out" }, 0.05);
+      tl.from("#s1-gauge", { scale: 0.85, opacity: 0, duration: 0.6, ease: "back.out(1.4)" }, 0.2);
+      tl.fromTo("#s1-needle", { rotation: 70 }, { rotation: -75, duration: 3.2, ease: "power2.inOut" }, 0.6);
+      tl.fromTo("#s1-arc", { strokeDashoffset: 0 }, { strokeDashoffset: 100, duration: 3.2, ease: "power2.inOut" }, 0.6);
+      ["c1", "c2", "c3"].forEach((id, i) => {
+        tl.fromTo("#" + id, { y: 0, opacity: 0, scale: 0.4 }, { y: -110, opacity: 1, scale: 1, duration: 0.5, ease: "back.out(2)" }, 1.3 + i * 0.35);
+        tl.to("#" + id, { y: 160, opacity: 0, duration: 1.0, ease: "power2.in" }, 2.4 + i * 0.3);
+      });
+      tl.to("#s1 .s1-title, #s1 .s1-gauge", { opacity: 0, duration: 0.25 }, 4.0);
+
+      // ---- scene 2 split screen
+      tl.fromTo("#s2-top", { clipPath: "inset(0 0 100% 0)" }, { clipPath: "inset(0 0 0% 0)", duration: 0.5, ease: "power3.out" }, 4.3);
+      tl.fromTo("#s2-bot", { clipPath: "inset(100% 0 0 0)" }, { clipPath: "inset(0% 0 0 0)", duration: 0.5, ease: "power3.out" }, 4.3);
+      tl.fromTo("#s2-div", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power3.out" }, 4.3);
+      tl.fromTo("#s2-bar-a", { scaleX: 0 }, { scaleX: 0.9, duration: 1.4, ease: "power2.out" }, 4.9);
+      tl.fromTo("#s2-bar-b", { scaleX: 0 }, { scaleX: 0.55, duration: 1.4, ease: "power2.out" }, 5.4);
+      tl.from("#s2-top .badge, #s2-bot .badge", { x: 80, opacity: 0, duration: 0.4, stagger: 0.15, ease: "power3.out" }, 4.6);
+      tl.from("#s2-top .note, #s2-bot .note", { opacity: 0, y: 20, duration: 0.4, stagger: 0.2 }, 6.2);
+      tl.to("#s2", { opacity: 0, duration: 0.2 }, 9.3);
+
+      // ---- scene 3 list
+      tl.from("#s3-title", { y: -50, opacity: 0, duration: 0.5, ease: "power3.out" }, 9.6);
+      ["s3-r1", "s3-r2", "s3-r3"].forEach((id, i) => {
+        tl.from("#" + id, { x: 300, opacity: 0, duration: 0.5, ease: "power3.out" }, 10.1 + i * 0.6);
+        tl.from("#" + id + " .up", { y: 30, opacity: 0, scale: 0.5, duration: 0.35, ease: "back.out(2.5)" }, 10.5 + i * 0.6);
+      });
+      tl.to("#s3", { opacity: 0, duration: 0.2 }, 13.8);
+
+      // ---- scene 4 split screen
+      tl.fromTo("#s4-top", { clipPath: "inset(0 100% 0 0)" }, { clipPath: "inset(0 0% 0 0)", duration: 0.5, ease: "power3.out" }, 14);
+      tl.fromTo("#s4-bot", { clipPath: "inset(0 0 0 100%)" }, { clipPath: "inset(0 0 0 0%)", duration: 0.5, ease: "power3.out" }, 14.1);
+      tl.fromTo("#s4-div", { scaleX: 0 }, { scaleX: 1, duration: 0.5, ease: "power3.out" }, 14);
+      tl.from("#s4-wrench", { rotation: -60, scale: 0.6, opacity: 0, duration: 0.6, transformOrigin: "50% 50%", ease: "back.out(1.6)" }, 14.4);
+      tl.from("#s4-top .tag", { opacity: 0, y: 30, duration: 0.4 }, 14.9);
+      tl.from("#s4-bottle", { y: 200, opacity: 0, duration: 0.6, ease: "back.out(1.4)" }, 14.7);
+      tl.to("#s4-bottle", { y: -14, duration: 0.6, ease: "sine.inOut", repeat: 3, yoyo: true }, 15.4);
+      tl.to("#s4", { opacity: 0, duration: 0.2 }, 17.5);
+
+      // ---- scene 5 CTA
+      tl.from("#s5-a", { opacity: 0, y: 40, duration: 0.4, ease: "power3.out" }, 17.8);
+      tl.from("#s5-b", { opacity: 0, scale: 0.4, duration: 0.6, ease: "back.out(2)" }, 18.0);
+      tl.from("#s5-c", { opacity: 0, y: 40, duration: 0.4, ease: "power3.out" }, 18.4);
+      tl.from(".s5-fine", { opacity: 0, duration: 0.5 }, 18.9);
+
+      window.__timelines["main"] = tl;
+      tl.seek(0);
+    </script>
+  </body>
+</html>
